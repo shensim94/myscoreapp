@@ -1,0 +1,95 @@
+{
+    "name": "Pebble Beach Golf Links",
+    "holes": [
+        {
+            "holeNum": 1,
+            "par":4,
+            "distance":348
+        },
+        {
+            "holeNum": 2,
+            "par":5,
+            "distance":458
+        },
+        {
+            "holeNum": 3,
+            "par":4,
+            "distance":381
+        },
+        {
+            "holeNum": 4,
+            "par":4,
+            "distance":308
+        },
+        {
+            "holeNum": 5,
+            "par":3,
+            "distance":144
+        },
+        {
+            "holeNum": 6,
+            "par":5,
+            "distance":490
+        },
+        {
+            "holeNum": 7,
+            "par":3,
+            "distance":98
+        },
+        {
+            "holeNum": 8,
+            "par":4,
+            "distance":388
+        },
+        {
+            "holeNum": 9,
+            "par":4,
+            "distance":463
+        },
+        {
+            "holeNum": 10,
+            "par":4,
+            "distance":428
+        },
+        {
+            "holeNum": 11,
+            "par":4,
+            "distance":349
+        },
+        {
+            "holeNum": 12,
+            "par":3,
+            "distance":187
+        },
+        {
+            "holeNum": 13,
+            "par":4,
+            "distance":390
+        },
+        {
+            "holeNum": 14,
+            "par":5,
+            "distance":570
+        },
+        {
+            "holeNum": 15,
+            "par":4,
+            "distance":375
+        },
+        {
+            "holeNum": 16,
+            "par":4,
+            "distance":378
+        },
+        {
+            "holeNum": 17,
+            "par":3,
+            "distance":176
+        },
+        {
+            "holeNum": 18,
+            "par":5,
+            "distance":521
+        }
+    ]
+}

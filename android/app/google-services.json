@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "731703727615",
+    "project_id": "myscorecard-6388b",
+    "storage_bucket": "myscorecard-6388b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:731703727615:android:bd6a515af500fd88c743ca",
+        "android_client_info": {
+          "package_name": "com.oregonstate.shensim.scorecardapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "731703727615-he1skkv335gb4skjhausotud2ghrcht9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbIbFg1q1AANNmR2NR2L7m82CzRJtcYUw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "731703727615-he1skkv335gb4skjhausotud2ghrcht9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
