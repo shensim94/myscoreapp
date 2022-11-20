@@ -4,7 +4,8 @@ class HoleScore{
   bool fairway;
   bool green;
   int? putts;
-  HoleScore({this.holeNum, this.strokes, this.fairway = false, this.green = false, this.putts});
+  int? driveDist;
+  HoleScore({this.holeNum, this.strokes, this.fairway = false, this.green = false, this.putts, this.driveDist});
   Map<String, dynamic> toMap(){
     return {
       'holeNum':holeNum,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/score_form.dart';
 import '../models/course_score.dart';
 import '../models/course.dart';
+import 'package:intl/intl.dart';
 import '../widgets/detailed_score_form.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -25,10 +26,16 @@ class _ScoreCardState extends State<ScoreCard> {
     }
     return true;
   }
+  String getDate() {
+    DateTime now = DateTime.now();
+    //print(FieldValue.serverTimestamp());
+    var formatter = DateFormat('EEEE, MMM d, yyyy');
+    return formatter.format(now);
+  }
   void uploadScore(){
     FirebaseFirestore.instance
                 .collection('scores')
-                .add({'date':'insert date here', 'course':widget.course.name, 'scores':scores.toMap()});
+                .add({'date':getDate(), 'course':widget.course.name, 'scores':scores.toMap(), 'created':FieldValue.serverTimestamp()});
                 Navigator.pushNamed(context, '/home');
   }
   void alertUser(){
@@ -78,7 +85,7 @@ class _ScoreCardState extends State<ScoreCard> {
               child: const Text('Submit Score')
             ),
           ),
-          
+
         ]
       ),
       endDrawer: Drawer(

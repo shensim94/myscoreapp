@@ -41,7 +41,6 @@ class _ScoreFormState extends State<ScoreForm> {
               print("changed");
               int score = int.parse(value);
               holeScore.strokes=score;
-
             },
             initialValue: holeScore.strokes != null ? holeScore.strokes.toString():null,
             textAlign: TextAlign.center,

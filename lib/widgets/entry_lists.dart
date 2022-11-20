@@ -12,36 +12,45 @@ class _EntryListsState extends State<EntryLists> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('My Score Card')),
+      appBar: AppBar(title: const Text('My Score Card')),
       body: StreamBuilder(
-          stream:
-              FirebaseFirestore.instance.collection('scores').snapshots(),
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          stream: FirebaseFirestore.instance.collection('scores').orderBy('created', descending: true).snapshots(),
+          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasData &&
                 snapshot.data!.docs != null &&
                 snapshot.data!.docs.length > 0) {
                   return ListView.builder(
                     itemCount:snapshot.data!.docs.length,
                     itemBuilder: (context, index){
-                      var post = snapshot.data!.docs[index];
-                      return GestureDetector(
-                        onTap:() {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => ScoreDetails()),
-                          );
-                        },
-                        child: ListTile(
-                          title: Text('${post['course']}, date placeholder, score placeholder'),
-                          subtitle: Text('tap to see more details'),
-                        )
-                      );
+                      QueryDocumentSnapshot post = snapshot.data!.docs[index];
+                      if(post.data().toString().contains('total_strokes')){
+                        return GestureDetector(
+                          onTap:() {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const ScoreDetails()),
+                            );
+                          },
+                          child: ListTile(
+                            title: Text('${post['course']}, ${post['date']}'),
+                            subtitle: Text('score: ${post['total_strokes']}, tap to see more details'),
+                          )
+                        );
+                      }else{
+                        return ListTile(
+                          title:Row(
+                            children: const [
+                              CircularProgressIndicator(),
+                              Text('Calculation in progress')
+                            ],
+                          )
+                        );
+                      }
                     },
                   );
 
             } else {
-              return Center(child: const Text("You have no scores recorded, tap on the button below to start"));
+              return const Center(child: Text("You have no scores recorded, tap on the button below to start"));
             }
           }),
           

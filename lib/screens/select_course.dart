@@ -46,7 +46,7 @@ class _SelectCourseState extends State<SelectCourse> {
                 const DropdownMenuItem(value:1, child:Text("Pebble Beach")),
                 const DropdownMenuItem(value:2, child:Text("Pinehurst")),
                 const DropdownMenuItem(value:3, child:Text("Torre Pines")),
-              ], 
+              ],
               decoration: InputDecoration(labelText: 'Course', border: OutlineInputBorder()),
               onChanged: (value){
                 setState(() {
