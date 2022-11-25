@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'score_details.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class EntryLists extends StatefulWidget {
   const EntryLists({Key? key}) : super(key: key);
@@ -31,10 +32,21 @@ class _EntryListsState extends State<EntryLists> {
                               MaterialPageRoute(builder: (context) => const ScoreDetails()),
                             );
                           },
-                          child: ListTile(
-                            title: Text('${post['course']}, ${post['date']}'),
-                            subtitle: Text('score: ${post['total_strokes']}, tap to see more details'),
+                          child: Dismissible(
+                            direction: DismissDirection.endToStart,
+                            background: Container(
+                              color: Colors.red,
+                            ),
+                            onDismissed: (DismissDirection direction){
+                              FirebaseFirestore.instance.collection('scores').doc(post.id).delete();
+                            },
+                            key: ValueKey<int>(index),
+                            child: ListTile(
+                              title: Text('${post['course']}, ${post['date']}, ${post.id}'),
+                              subtitle: Text('score: ${post['total_strokes']}, tap to see more details'),
+                            )
                           )
+                          
                         );
                       }else{
                         return ListTile(
