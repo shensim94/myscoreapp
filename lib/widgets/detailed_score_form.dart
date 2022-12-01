@@ -8,15 +8,16 @@ import '../models/haversine.dart';
 
 class DetailedScoreForm extends StatefulWidget{
   bool hasCourse;
-  Course course;
+  Course? course;
   int holeIndex;
   CourseScore courseScore;
-  DetailedScoreForm({Key? key, required this.hasCourse, required this.course, required this.courseScore, required this.holeIndex}) : super(key: key);
+  DetailedScoreForm({Key? key, required this.hasCourse, this.course, required this.courseScore, required this.holeIndex}) : super(key: key);
   @override
   State<DetailedScoreForm> createState() => _DetailedScoreFormState();
 }
 
 class _DetailedScoreFormState extends State<DetailedScoreForm> {
+
   late HoleScore holeScore;
   late bool isChecked;
   late bool isRecording;
@@ -27,56 +28,61 @@ class _DetailedScoreFormState extends State<DetailedScoreForm> {
   late bool _serviceEnabled;
   late PermissionStatus _permissionGranted;
 
-  /* retrieves the location */
-  Future retrieveLocation() async {
-    
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) {
-        return;
-      }
-    }
-
-    _permissionGranted = await location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await location.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
-        return;
-      }
-    }
-    LocationData tempData = await location.getLocation();
-    return tempData;
-  }
-
-
   @override
   void initState() {
-    // TODO: implement initState
     isRecording = false;
     holeScore = widget.courseScore.scores[widget.holeIndex];
     holeScore.holeNum = widget.holeIndex+1;
+    if (widget.hasCourse){
+      holeScore.holeDist = widget.course?.holes![widget.holeIndex].distance;
+      holeScore.holePar = widget.course?.holes![widget.holeIndex].par;
+    }
   }
-
 
   final formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context){
-    return Form(
-      key:formKey,
-      child: Column(
+    return Card(
+      margin:const EdgeInsets.all(3),
+      color:const Color.fromARGB(255, 236, 223, 195),
+      child:Padding(
+        padding: const EdgeInsets.all(5),
+        child:Form(
+        key:formKey,
+        child: Column(
+          children: [
+            scoreCardHeader(),
+            distanceForm(context),
+            scoreForm(context),
+            fairwayCheckBox(context),
+            greenCheckBox(context),
+            puttForm(context),
+          ],
+        ),
+      )
+    ));
+  }
+
+  ////////////////
+  /// WIDGETS ////
+  ////////////////
+
+  Widget scoreCardHeader(){
+    if(widget.hasCourse){
+      return Column(
         children: [
-          widget.hasCourse? Text('Hole ${widget.course.holes![widget.holeIndex].holeNum}'):Text('Hole ${widget.holeIndex+1}'),
-          widget.hasCourse? Text('Par ${widget.course.holes![widget.holeIndex].par}'):const SizedBox(width:0, height: 0,),
-          widget.hasCourse? Text('${widget.course.holes![widget.holeIndex].distance} Yards'):const SizedBox(width:0, height: 0,),
-          distanceForm(context),
-          scoreForm(context),
-          fairwayCheckBox(context),
-          greenCheckBox(context),
-          puttForm(context),
-        ],
-      ),
-    );
+          Text('Hole ${widget.course?.holes![widget.holeIndex].holeNum}'),
+          Text('Par ${widget.course?.holes![widget.holeIndex].par}'),
+          Text('${widget.course?.holes![widget.holeIndex].distance} Yards')
+        ]
+      );
+    } else {
+      return Column(
+        children: [
+          Text('Hole ${widget.holeIndex+1}'),
+        ]
+      );
+    }
   }
 
   Widget distanceForm(BuildContext context){
@@ -115,7 +121,7 @@ class _DetailedScoreFormState extends State<DetailedScoreForm> {
         int score = int.parse(value);
         holeScore.strokes=score;
       },
-      initialValue: holeScore.strokes != null ? holeScore.strokes.toString():null,
+      initialValue: holeScore.strokes != null? holeScore.strokes.toString():null,
       textAlign: TextAlign.center,
       decoration: const InputDecoration(hintText: "Enter score"),
       keyboardType: TextInputType.number,
@@ -148,7 +154,6 @@ class _DetailedScoreFormState extends State<DetailedScoreForm> {
       onChanged: (bool? value) {
         setState(() {
           holeScore.fairway = value!;
-          //isChecked = value;
         });
       },
     );
@@ -161,9 +166,34 @@ class _DetailedScoreFormState extends State<DetailedScoreForm> {
       onChanged: (bool? value) {
         setState(() {
           holeScore.green = value!;
-          //isChecked = value;
         });
       },
     );
+  }
+  
+  ////////////////
+  /// METHODS ////
+  ////////////////
+  
+  /* retrieves the location */
+  Future retrieveLocation() async {
+
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+    LocationData tempData = await location.getLocation();
+    return tempData;
   }
 }

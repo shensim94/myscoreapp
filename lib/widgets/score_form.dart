@@ -7,10 +7,10 @@ import '../models/course.dart';
 
 class ScoreForm extends StatefulWidget{
   bool hasCourse;
-  Course course;
+  Course? course;
   int holeIndex;
   CourseScore courseScore;
-  ScoreForm({Key? key, required this.hasCourse,required this.course, required this.courseScore, required this.holeIndex}) : super(key: key);
+  ScoreForm({Key? key, required this.hasCourse, this.course, required this.courseScore, required this.holeIndex}) : super(key: key);
   @override
   State<ScoreForm> createState() => _ScoreFormState();
 }
@@ -20,45 +20,64 @@ class _ScoreFormState extends State<ScoreForm> {
 
   @override
   void initState() {
-    // TODO: implement initState
     holeScore = widget.courseScore.scores[widget.holeIndex];
     holeScore.holeNum = widget.holeIndex+1;
+    if (widget.hasCourse){
+      holeScore.holeDist = widget.course?.holes![widget.holeIndex].distance;
+      holeScore.holePar = widget.course?.holes![widget.holeIndex].par;
+    }
   }
 
 
   final formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context){
-    return Form(
+    return Card(margin:const EdgeInsets.all(3),
+    color:const Color.fromARGB(255, 236, 223, 195),
+    child:Padding(padding: EdgeInsets.all(5),
+    child: Form(
       key:formKey,
       child: Column(
         children: [
-          widget.hasCourse? Text('Hole ${widget.course.holes![widget.holeIndex].holeNum}'):Text('Hole ${widget.holeIndex+1}'),
-          widget.hasCourse? Text('Par ${widget.course.holes![widget.holeIndex].par}'):const SizedBox(width:0, height: 0,),
-          widget.hasCourse? Text('${widget.course.holes![widget.holeIndex].distance} Yards'):const SizedBox(width:0, height: 0,),
-          TextFormField(
-            onChanged: (value) {
-              print("changed");
-              int score = int.parse(value);
-              holeScore.strokes=score;
-            },
-            initialValue: holeScore.strokes != null ? holeScore.strokes.toString():null,
-            textAlign: TextAlign.center,
-            decoration: const InputDecoration(hintText: "Enter Score"),
-            keyboardType: TextInputType.number,
-            inputFormatters: <TextInputFormatter>[
-              FilteringTextInputFormatter.digitsOnly
-            ],
-            validator: (value){
-              if(value!.isEmpty){
-                return 'Please enter a valid number';
-              } else {
-                return null;
-              }
-            },
-          ),
+          scoreCardHeader(),
+          scoreForm(context)
         ],
       ),
+    )));
+  }
+
+  Widget scoreForm(BuildContext context){
+    return TextFormField(
+      onChanged: (value) {
+        print("changed");
+        int score = int.parse(value);
+        holeScore.strokes=score;
+      },
+      initialValue: holeScore.strokes != null? holeScore.strokes.toString():null,
+      textAlign: TextAlign.center,
+      decoration: const InputDecoration(hintText: "Enter score"),
+      keyboardType: TextInputType.number,
+      inputFormatters: <TextInputFormatter>[
+        FilteringTextInputFormatter.digitsOnly
+      ],
     );
+  }
+
+  Widget scoreCardHeader(){
+    if(widget.hasCourse){
+      return Column(
+        children: [
+          Text('Hole ${widget.course?.holes![widget.holeIndex].holeNum}'),
+          Text('Par ${widget.course?.holes![widget.holeIndex].par}'),
+          Text('${widget.course?.holes![widget.holeIndex].distance} Yards')
+        ]
+      );
+    } else {
+      return Column(
+        children: [
+          Text('Hole ${widget.holeIndex+1}'),
+        ]
+      );
+    }
   }
 }
